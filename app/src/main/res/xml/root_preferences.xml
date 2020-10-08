@@ -4,7 +4,7 @@
     <PreferenceCategory app:title="Benutzereinstellungen">
         <Preference
             android:key="matrikel"
-            android:summary="Matrikelnummber die registriert werden soll"
+            android:summary="Matrikelnummer, die registriert werden soll"
             android:title="Matrikelnummer" />
 
     </PreferenceCategory>
