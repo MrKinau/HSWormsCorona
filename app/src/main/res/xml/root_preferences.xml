@@ -1,0 +1,13 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory app:title="Benutzereinstellungen">
+        <Preference
+            android:key="matrikel"
+            android:summary="Matrikelnummber die registriert werden soll"
+            android:title="Matrikelnummer" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
+
