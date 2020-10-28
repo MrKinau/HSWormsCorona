@@ -9,9 +9,8 @@ A simple (and crappy) Android-App to register without scanning a QR-Code and ent
 1. Download the apk from [here](https://github.com/MrKinau/HSWormsCorona/releases/tag/1.0.0)
 2. Open the apk on an android device (You have to allow to install apps from unknown sources).
 3. Start the app.
-4. A popup should come up requesting to disable battery optimization (because I was to lazy to to program it properly, lol).
-5. Open the settings (top right corner) and set your student ID.
-6. Add all required rooms with the button on the bottom right corner.
+4. Open the settings (top right corner) and set your student ID.
+5. Add all required rooms with the button on the bottom right corner.
 
 ## Check in to a room
 Click on the card with the room you want to check in.
@@ -24,7 +23,7 @@ Either click on the checkout button in the notification or click onto the checko
 # Why?
 1. No QR-Code scan required
 2. You do not have to type your student ID every time you want to check in
-3. You do not forget to check out, because you get reminded by a notification (at least if you disabled battery optimization)
+3. You do not forget to check out, because you get reminded by a notification
 4. Why not?
 
 # Issues
