@@ -9,6 +9,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.Volley
 import de.hsworms.hs_wormszutritt.MainActivity
 import de.hsworms.hs_wormszutritt.service.UpdateNotificationService
+import java.util.*
 
 object RoomRegistration {
 
@@ -48,13 +49,19 @@ object RoomRegistration {
                         }
                         val startIndex = it.indexOf("Vielen Dank für Ihre Registrierung in Raum");
                         val msg = it.subSequence(startIndex, startIndex + 48)
+                        val currentTime = Calendar.getInstance().time.time
+
                         prefs.edit().putString("current_room", room).apply()
+                        prefs.edit().putLong("registration_time", currentTime).apply()
                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+
                         if (context is MainActivity)
                             context.setupCheckout()
                         val intent = Intent(context, UpdateNotificationService::class.java).apply {
                             putExtra("room", room)
+                            putExtra("startTime", currentTime)
                         }
+
                         context.startService(intent)
                         return@Listener
                     }
@@ -62,6 +69,7 @@ object RoomRegistration {
                         val startIndex = it.indexOf("Danke fürs Abmelden aus Raum");
                         val msg = it.subSequence(startIndex, startIndex + 33)
                         prefs.edit().remove("current_room").apply()
+                        prefs.edit().remove("registration_time").apply()
                         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
                         if (context is MainActivity)
                             context.setupCheckout()
