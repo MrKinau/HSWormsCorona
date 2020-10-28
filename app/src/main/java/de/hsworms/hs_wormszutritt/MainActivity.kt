@@ -1,14 +1,13 @@
 package de.hsworms.hs_wormszutritt
 
+import android.R.string
+import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.PowerManager
-import android.provider.Settings
 import android.text.InputType
 import android.util.Log
 import android.view.Menu
@@ -25,6 +24,7 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import de.hsworms.hs_wormszutritt.activity.SettingsActivity
 import de.hsworms.hs_wormszutritt.adapter.RoomAdapter
+import de.hsworms.hs_wormszutritt.service.UpdateNotificationService
 import de.hsworms.hs_wormszutritt.viewmodel.RoomsViewModel
 import de.hsworms.hs_wormszutritt.volley.RoomRegistration
 import kotlinx.android.synthetic.main.content_main.*
@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         setupAdapter()
         setupRoomInput()
         createNotificationChannel()
-        requestDisableBatteryOptimizadion()
 
         viewModel.rooms.observe(this, Observer {
             (roomsList.adapter as RoomAdapter).notifyDataSetChanged()
@@ -124,7 +123,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun generateRooms() : MutableList<String> {
         val list = mutableListOf<String>()
-        listOf('A','B','C','D','F','G','H','K','L','M','N','O','P').forEach { letter ->
+        listOf('A', 'B', 'C', 'D', 'F', 'G', 'H', 'K', 'L', 'M', 'N', 'O', 'P').forEach { letter ->
             (0..499)
                 .map { it.toString().padStart(3, '0') }
                 .forEach { list.add(letter + it) }
@@ -163,30 +162,44 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun requestDisableBatteryOptimizadion() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val intent = Intent()
-            val packageName = packageName
-            val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                intent.data = Uri.parse("package:$packageName")
-                startActivity(intent)
-            }
-        }
-    }
-
     fun setupCheckout() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         if (prefs.contains("current_room")) {
-            checkoutButton.text = "Checkout: Raum " + prefs.getString("current_room", "")
+            val currentRoom = prefs.getString("current_room", "")
+            val startTime = prefs.getLong("registration_time", 0L)
+
+            checkoutButton.text = "Checkout: Raum " + currentRoom
             checkoutButton.visibility = View.VISIBLE
             checkoutButton.setOnClickListener {
-                RoomRegistration.checkOut(prefs.getString("current_room", "")!!, prefs.getString("matrikel","")!!, this)
+                RoomRegistration.checkOut(
+                    prefs.getString("current_room", "")!!, prefs.getString(
+                        "matrikel",
+                        ""
+                    )!!, this
+                )
                 checkoutButton.visibility = View.GONE
             }
+
+            if (!isNotificationServiceRunning()) {
+                val intent = Intent(this, UpdateNotificationService::class.java).apply {
+                    putExtra("room", currentRoom)
+                    putExtra("startTime", startTime)
+                }
+                this.startService(intent)
+            }
+
         } else
             checkoutButton.visibility = View.GONE
+    }
+
+    private fun isNotificationServiceRunning(): Boolean {
+        val manager: ActivityManager = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (UpdateNotificationService::class.java.name == service.service.className) {
+                return true
+            }
+        }
+        return false
     }
 
 }
