@@ -6,7 +6,7 @@
 A simple (and crappy) Android-App to register without scanning a QR-Code and enter your student ID
 
 ## How to use
-1. Download the apk from [here](https://github.com/MrKinau/HSWormsCorona/releases/tag/1.0.0)
+1. Download the apk from [here](https://github.com/MrKinau/HSWormsCorona/releases/tag/1.0.2)
 2. Open the apk on an android device (You have to allow to install apps from unknown sources).
 3. Start the app.
 4. Open the settings (top right corner) and set your student ID.
