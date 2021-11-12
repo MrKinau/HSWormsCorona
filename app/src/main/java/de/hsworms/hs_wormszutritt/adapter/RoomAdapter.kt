@@ -26,7 +26,7 @@ class RoomAdapter(private val activity: MainActivity) : RecyclerView.Adapter<Roo
                     Toast.makeText(activity, "Bitte setze zuerst deine Matrikelnummer in den Einstellungen", Toast.LENGTH_LONG).show()
                     return@setOnClickListener
                 }
-                RoomRegistration.checkIn(room.text.toString(), "TEST", activity)
+                RoomRegistration.checkIn(room.text.toString(), prefs.getString("matrikel", "")!!, activity)
             }
 
             room.setOnLongClickListener {
